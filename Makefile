@@ -1,14 +1,21 @@
 BINS=naive
+
 CC=gcc
 CFLAGS=-Wall
 
-.PHONY: clean all
+.PHONY: clean all print $(BINS)
 
 all: $(BINS)
 
-$(BINS): %: %.c driver.c
-	mkdir -p bin
-	$(CC) $(CFLAGS) -o bin/$@ driver.c $<
+$(BINS): %: bin/%
+
+bin/%: %.c driver.c | bin
+	$(CC) $(CFLAGS) -o $@ driver.c $<
+
+bin:
+	mkdir bin
+
+print-%: ; @echo $* = $($*)
 
 clean:
 	rm -rf bin/
