@@ -11,7 +11,6 @@
 typedef unsigned long long ull;
 
 ull powmod(ull base, ull exp, ull mod);
-int witness(ull n, ull s, ull d, ull a);
 
 // Calculates probable primality through the miller-rabin primality test
 int isPrime(ull n) {
@@ -41,22 +40,6 @@ int isPrime(ull n) {
 			temp = temp * 2;
 		}
 		if (mod != n - 1 && !(temp & 1)) return 0;
-	}
-
-	return 1;
-}
-
-int witness(ull n, ull s, ull d, ull a) {
-	ull x;
-
-	x = powmod(a, d, n);
-	if (x == 1 || x == n - 1) return 1;
-
-	while (s) {
-		x = (x * x) % n;
-		if (x == 1) return 0;
-		if (x == n - 1) return 1;
-		s--;
 	}
 
 	return 1;
