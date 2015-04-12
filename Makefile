@@ -6,7 +6,7 @@ CFLAGS=-Wall -g
 
 all: $(BINS)
 
-%: %.c driver.c
+$(BINS): %: %.c driver.c
 	$(CC) $(CFLAGS) -o $@ driver.c $<
 
 clean:
