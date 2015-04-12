@@ -1,35 +1,41 @@
+#include <gmp.h>
+#include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 
 #include "bufrand.h"
 #include "primes.h"
 
-#define SIZE 100
-#define RANGE_MAX 100
-#define RANGE_MIN 1 // should be an odd number
+#define SIZE 100000
+#define RANGE_MAX LONG_MAX - 1000
+#define RANGE_MIN LONG_MAX - 100
 
-unsigned long long arr[SIZE];
+mpz_t arr;
 
 int main() {
-	int i, result;
+	mpz_t tmp;
+	gmp_randstate_t rs;
+	unsigned int i;
+	
+	gmp_randinit_default(rs);
+	mpz_init2(tmp, SIZE);
+	mpz_init2(arr, SIZE);
 
-	srand(1);
+	mpz_set_ui(arr, 1);
 
-	for (i = 0; i < SIZE; i++) {
-		// generates odd numbers in [1, RANGE_MAX)
-		unsigned long long num;
-		bufrand(&num, sizeof(unsigned long long));
-		arr[i] = (num % (RANGE_MAX - RANGE_MIN)/2) * 2 + RANGE_MIN;
+	for (i = SIZE>>3; i < SIZE; i++) {
+		mpz_mul_ui(arr, arr, 2);
+		gmp_printf("testing...");
+		unsigned int j;
+		for (j = 0; j < 1000000; j++) {
+			mpz_add_ui(tmp, arr, j);
+			if (isPrime(tmp)) {
+				gmp_printf("%Zd", tmp);
+				break;
+			}
+		}
+		gmp_printf("\n");
 	}
-
-	for (i = 0; i < SIZE; i++) {
-		//printf("Calculating primality of %llu...\n", arr[i]);
-		result = isPrime(arr[i]);
-		if (result)
-			printf("%llu, ", arr[i]);
-		//printf("%llu is %s\n", arr[i], result?"prime":"not prime");
-	}
-	printf("\n");
+	gmp_printf("\n");
 
 	return 0;
 }

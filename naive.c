@@ -1,16 +1,21 @@
+#include <gmp.h>
+#include <stdbool.h>
+#include <stdarg.h>
 #include "primes.h"
 
-int isPrime(unsigned long long n) {
-	unsigned long long i;
+bool isPrime(mpz_t n) {
+	mpz_t i, c, r;
+	mpz_inits(i, c, r, NULL);
 
-	if (n < 2) return 0;
-	if (n == 2) return 1;
-	if (n % 2 == 0) return 0;
+	if (mpz_cmp_si(n, 2) < 0) return false;
+	if (mpz_cmp_si(n, 2) == 0) return true;
+	mpz_mod_ui(r, n, 2);
+	if (mpz_cmp_ui(r, 0) == 0) return false;
 
-	for (i = 2; i < n; i++) {
-		if (n % i == 0)
-			return 0;
+	for (mpz_set_ui(i, 2); mpz_cmp(i, n) < 0; mpz_add_ui(i, i, 1)) {
+		mpz_mod(r, n, i);
+		if (mpz_cmp_ui(r, 0) == 0) return false;
 	}
 
-	return 1;
+	return true;
 }

@@ -6,7 +6,7 @@
 #include "bufrand.h"
 #include "primes.h"
 
-#define NUM_TRIALS 20
+#define NUM_TRIALS 10
 
 typedef unsigned long long ull;
 
@@ -15,7 +15,7 @@ ull powmod(ull base, ull exp, ull mod);
 // Calculates probable primality through the miller-rabin primality test
 int isPrime(ull n) {
 	ull s, d, a;
-	unsigned int k = NUM_TRIALS;
+	ull k = NUM_TRIALS;
 
 	if (n < 2) return 0;
 	if (n == 2) return 1;
