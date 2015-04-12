@@ -1,6 +1,7 @@
 #include <gmp.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <stdlib.h>
 #include "primes.h"
 
 bool isPrime(mpz_t n) {

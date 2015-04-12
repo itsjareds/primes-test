@@ -29,7 +29,7 @@ int main() {
 		for (j = 0; j < 1000000; j++) {
 			mpz_add_ui(tmp, arr, j);
 			if (isPrime(tmp)) {
-				gmp_printf("%Zd", tmp);
+				gmp_printf("%Zd is a prime number.", tmp);
 				break;
 			}
 		}
