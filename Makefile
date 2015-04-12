@@ -1,4 +1,4 @@
-BINS=naive
+BINS=naive miller-rabin
 
 CC=gcc
 CFLAGS=-Wall
@@ -10,7 +10,7 @@ all: $(BINS)
 $(BINS): %: bin/%
 
 bin/%: %.c driver.c | bin
-	$(CC) $(CFLAGS) -o $@ driver.c $<
+	$(CC) $(CFLAGS) -o $@ driver.c bufrand.c $<
 
 bin:
 	mkdir bin
