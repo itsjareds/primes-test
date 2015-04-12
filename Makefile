@@ -1,13 +1,14 @@
 BINS=naive
 CC=gcc
-CFLAGS=-Wall -g
+CFLAGS=-Wall
 
 .PHONY: clean all
 
 all: $(BINS)
 
 $(BINS): %: %.c driver.c
-	$(CC) $(CFLAGS) -o $@ driver.c $<
+	mkdir -p bin
+	$(CC) $(CFLAGS) -o bin/$@ driver.c $<
 
 clean:
-	rm -rf $(BINS)
+	rm -rf bin/
