@@ -1,4 +1,4 @@
-BINS=naive miller-rabin2
+BINS=naive miller-rabin2 miller-rabin3
 
 CC=gcc
 CFLAGS=-Wall -O3
