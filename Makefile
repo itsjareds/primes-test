@@ -1,6 +1,6 @@
 BINS=naive miller-rabin2 miller-rabin3
 
-CC=gcc
+CC=mpicc
 CFLAGS=-Wall -O3
 
 .PHONY: clean all print $(BINS)

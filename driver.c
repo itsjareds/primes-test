@@ -1,4 +1,4 @@
-#include "mpi.h"
+#include <mpi.h>
 #include <gmp.h>
 #include <stdbool.h>
 #include <stdio.h>
