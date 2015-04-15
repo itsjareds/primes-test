@@ -1,13 +1,28 @@
 BINS=naive miller-rabin2 miller-rabin3
+MPIBINS=brute brute-gmp
 
-CC=mpicc
-CFLAGS=-Wall -O3
+CC=gcc
+CFLAGS=-O3
 
-.PHONY: clean all print $(BINS)
+MPICC=mpicc
+MPIFLAGS=
+GMPFLAGS=-DUSE_GMP
 
-all: $(BINS)
+.SUFFIXES:
+
+.PHONY: clean all $(BINS)
+
+all: $(BINS) $(MPIBINS)
 
 $(BINS): %: bin/%
+
+$(MPIBINS): %: bin/mpi/%
+
+bin/mpi/%-gmp: %-gmp.c | bin/mpi
+	$(MPICC) $(CFLAGS) $(MPIFLAGS) $(GMPFLAGS) -o $@ $< mpigmp/mpi_gmp.c -lgmp
+
+bin/mpi/%: %.c | bin/mpi
+	$(MPICC) $(CFLAGS) $(MPIFLAGS) -o $@ $<
 
 bin/%: %.c driver.c | bin
 	$(CC) $(CFLAGS) -o $@ driver.c bufrand.c $< -lgmp
@@ -15,7 +30,8 @@ bin/%: %.c driver.c | bin
 bin:
 	mkdir bin
 
-print-%: ; @echo $* = $($*)
+bin/mpi: | bin
+	mkdir bin/mpi
 
 clean:
 	rm -rf bin/

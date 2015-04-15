@@ -1,0 +1,30 @@
+-----------------------------------------------------------------
+---------------------- Using GMP with MPI -----------------------
+-----------------------------------------------------------------
+------------------------ Tomonori Kouya -------------------------
+-----------------------------------------------------------------
+1. Introduction
+	This archive is a simple library to obtain multiple precision
+arithmetic for users by using GMP.
+
+2. Contents
+	README    ... This file.
+	License.txt ... LGPL document.
+	mpi_gmp.h ... Header file of this library.
+	mpi_gmp.c ... Source file of this library.
+	cpi-gmp.c ... An example program using mpf_t datatype.
+	test_mpzq.c ... An example program using mpz_t and mpq_t datatypes.
+
+	Read "cpi-gmp.c", "test_mpzq.c" and "mpi_gmp.c" for further
+details on this library.
+
+3. How to compile & run
+	GMP Only:
+		% mpicc -oexample example.c mpi_gmp.c -lgmp -lm
+		% mpirun -np 8 ./example
+	With MPFR
+		% mpicc -oexample -DUSE_MPFR example.c mpi_gmp.c -lmpfr -lgmp -lm
+		% mpirun -np 8 ./example
+
+4. Lisence
+	This archive is based on GNU Lesser General Public License (LGPL). See "Lisence.txt" file included in details.
