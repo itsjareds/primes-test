@@ -1,6 +1,8 @@
 BINS=naive miller-rabin2 miller-rabin3
 MPIBINS=brute brute-gmp
 
+AR=tar
+
 CC=gcc
 CFLAGS=-O3
 
@@ -8,9 +10,14 @@ MPICC=mpicc
 MPIFLAGS=
 GMPFLAGS=-DUSE_GMP
 
+ARCHIVE = \
+	Makefile LICENSE README.md primes.h bufrand.c bufrand.h \
+ 	driver.c naive.c miller-rabin.c miller-rabin2.c miller-rabin3.c \
+ 	brute-gmp.c brute.c mpigmp/
+
 .SUFFIXES:
 
-.PHONY: clean all $(BINS)
+.PHONY: archive clean all $(BINS)
 
 all: $(BINS) $(MPIBINS)
 
@@ -32,6 +39,9 @@ bin:
 
 bin/mpi: | bin
 	mkdir bin/mpi
+
+tar:
+	$(AR) -czf project.tar.gz $(ARCHIVE)
 
 clean:
 	rm -rf bin/
