@@ -3,9 +3,11 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mpigmp/mpi_gmp.h"
+#include "primes.h"
 
 #define DEFAULT_RESULT -1
 #define NBITS_MAX 128
+#define NUM_WITNESSES 50
 //#define CUSTOM 8589935681
 
 int main(int argc, char *argv[])
@@ -30,7 +32,7 @@ int main(int argc, char *argv[])
   mpz_init(i); mpz_init(j); mpz_init(count);
   mpz_init(random);
 
-  mpz_set_ui(count, 2);
+  mpz_set_ui(count, 0);
 
 #ifndef CUSTOM
   gmp_randinit_default(rstate);
@@ -46,13 +48,13 @@ int main(int argc, char *argv[])
   if (rank == 0) gmp_printf("random = %Zd\n", random);
 
   if (rank == 0 && mpz_cmp_ui(random,2)>0){
-    for (mpz_set_ui(i,1);mpz_cmp_si(i, size)<0 && mpz_cmp(count,random)<0;mpz_add_ui(i,i,1)) {
+    for (mpz_set_ui(i,1);mpz_cmp_si(i, size)<0 && mpz_cmp_ui(count,NUM_WITNESSES)<0;mpz_add_ui(i,i,1)) {
       mpz_add_ui(j, i, 1);
 
       // Send j to ith worker
-      jsize = (int)get_bufsize_mpz(j);
-      jbuf = allocbuf_mpz(j);
-      pack_mpz(j, jbuf);
+      jsize = (int)get_bufsize_mpz(random);
+      jbuf = allocbuf_mpz(random);
+      pack_mpz(random, jbuf);
       sl_i = mpz_get_si(i);
       MPI_Send(&jsize, 1, MPI_INT, sl_i, 1, MPI_COMM_WORLD);
       MPI_Send(jbuf, jsize, MPI_BYTE, sl_i, 1, MPI_COMM_WORLD);
@@ -64,11 +66,11 @@ int main(int argc, char *argv[])
       MPI_Recv(&result, 1, MPI_INT, MPI_ANY_SOURCE, 0, MPI_COMM_WORLD, &status);
       if(result == 0) break;
 
-      if(mpz_cmp(count,random)<0) {
+      if(mpz_cmp_ui(count,NUM_WITNESSES)<0) {
         // Send next workload
-        jsize = (int)get_bufsize_mpz(count);
-        jbuf = allocbuf_mpz(count);
-        pack_mpz(count, jbuf);
+        jsize = (int)get_bufsize_mpz(random);
+        jbuf = allocbuf_mpz(random);
+        pack_mpz(random, jbuf);
         MPI_Send(&jsize, 1, MPI_INT, status.MPI_SOURCE, 1, MPI_COMM_WORLD);
         MPI_Send(jbuf, jsize, MPI_BYTE, status.MPI_SOURCE, 1, MPI_COMM_WORLD);
         freebuf_mpz(jbuf);
@@ -89,16 +91,14 @@ int main(int argc, char *argv[])
 
       if (mpz_cmp_si(count, -1) == 0) break;
       result = 1;
-      if (mpz_cmp(count, random) != 0) {
-        mpz_mod(j, random, count);
-        if (mpz_cmp_si(j, 0) == 0)
-          result = 0;
-      }
+      if (isPrime(count) != true)
+        result = 0;
       MPI_Send(&result, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);
     }
   }
 
   if (rank == 0) {
+    gmp_printf("tested %Zd witnesses\n", count);
     printf("\nIt's %s prime\n", result?"a":"not a");
     t = MPI_Wtime() - start;
 

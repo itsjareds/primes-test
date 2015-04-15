@@ -56,7 +56,7 @@ static int mpi_millerrabin (mpz_srcptr, mpz_srcptr,
 			mpz_srcptr, unsigned long int);
 
 bool isPrime(mpz_t n) {
-	return (mpi_mpz_millerrabin(n, 25) != 0);
+	return (mpi_mpz_millerrabin(n, 1) != 0);
 }
 
 int

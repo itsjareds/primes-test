@@ -1,5 +1,5 @@
 BINS=naive miller-rabin2 miller-rabin3
-MPIBINS=brute brute-gmp
+MPIBINS=brute brute-gmp mr-gmp
 
 AR=tar
 
@@ -24,6 +24,9 @@ all: $(BINS) $(MPIBINS)
 $(BINS): %: bin/%
 
 $(MPIBINS): %: bin/mpi/%
+
+bin/mpi/mr-gmp: mr-gmp.c | bin/mpi
+	$(MPICC) $(CFLAGS) $(MPIFLAGS) $(GMPFLAGS) -o $@ $< miller-rabin3.c mpigmp/mpi_gmp.c -lgmp
 
 bin/mpi/%-gmp: %-gmp.c | bin/mpi
 	$(MPICC) $(CFLAGS) $(MPIFLAGS) $(GMPFLAGS) -o $@ $< mpigmp/mpi_gmp.c -lgmp
