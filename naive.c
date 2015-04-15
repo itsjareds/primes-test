@@ -6,7 +6,9 @@
 
 bool isPrime(mpz_t n) {
 	mpz_t i, c, r;
-	mpz_inits(i, c, r, NULL);
+	mpz_init(i);
+	mpz_init(c);
+	mpz_init(r);
 
 	if (mpz_cmp_si(n, 2) < 0) return false;
 	if (mpz_cmp_si(n, 2) == 0) return true;
