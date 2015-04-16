@@ -26,20 +26,16 @@ if (rank ==0){
     count++;
     MPI_Recv(&result, 1, MPI_INT, i, 0, MPI_COMM_WORLD, &status);
       if(result == 0){
-  printf("\ncount:%d\n",count);
+	printf("\ncount:%d\n",count);
         printf("It's not a prime");
         t = MPI_Wtime() - start;
         printf("\ntotal execution time: %f\n",t);
-        MPI_Finalize();
-        exit(0);
+        MPI_Abort(MPI_COMM_WORLD,0);
+	exit(0);
       }
   }
   else {
-    printf("done\n");
-    t = MPI_Wtime() - start;
-    printf("\ntotal execution time: %f\n",t);
-    MPI_Finalize();
-    exit(0);
+    break;
   }
   }
   }
@@ -56,6 +52,6 @@ else{
 printf("Finish");
 t = MPI_Wtime() - start;
 printf("\ntotal execution time: %f\n",t);
-MPI_Finalize();
+MPI_Abort(MPI_COMM_WORLD, 0);
 return 0;
 }
